@@ -1,7 +1,7 @@
 {
   "name": "react-day-tripper",
   "version": "1.0.0",
-  "description": "React Tools for Day Planners, Schedules, and Calendars",
+  "description": "React Tools for Creating Day Planners, Schedules, and Calendars",
   "author": "jmpolitzer",
   "license": "MIT",
   "repository": "jmpolitzer/react-day-tripper",
@@ -79,5 +79,9 @@
       "eslint --fix",
       "git add"
     ]
+  },
+  "dependencies": {
+    "date-fns": "2.0.0-alpha.27",
+    "uuid": "^3.3.2"
   }
 }

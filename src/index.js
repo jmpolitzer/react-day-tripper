@@ -1,7 +1,3 @@
-import React from 'react';
+import { Calendar } from './components';
 
-export default function ExampleComponent(props) {
-  const { text } = props;
-
-  return <div>Example Component: {text}</div>;
-}
+export { Calendar };
