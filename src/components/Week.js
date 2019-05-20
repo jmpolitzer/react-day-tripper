@@ -38,6 +38,7 @@ function Week(props) {
         previous={goToPreviousWeek}
         next={goToNextWeek}
         title={getWeekNavTitle()}
+        changeView={changeView}
       />
       <div className='week'>
         {currentWeek.map((day, i) => {

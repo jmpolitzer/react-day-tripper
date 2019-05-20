@@ -29,6 +29,7 @@ function Month(props) {
           previous={goToPreviousMonth}
           next={goToNextMonth}
           title={getMonthNavHeader()}
+          changeView={changeView}
         />
       ) : (
         <div>

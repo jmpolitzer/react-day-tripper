@@ -143,6 +143,7 @@ function Day(props) {
           previous={goToPreviousDay}
           next={goToNextDay}
           title={getDayNavTitle()}
+          changeView={changeView}
         />
       )}
       <div

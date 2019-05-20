@@ -25,6 +25,7 @@ function Year(props) {
         previous={goToPreviousYear}
         next={goToNextYear}
         title={getYearNavTitle()}
+        changeView={changeView}
       />
       <div>
         {quarters.map((quarter, i) => (
