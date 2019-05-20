@@ -5,5 +5,15 @@ import Week from './Week';
 import Month from './Month';
 import Year from './Year';
 import CalendarEvent from './CalendarEvent';
+import TimeRange from './TimeRange';
 
-export { Calendar, Navigation, Day, Week, Month, Year, CalendarEvent };
+export {
+  Calendar,
+  Navigation,
+  Day,
+  Week,
+  Month,
+  Year,
+  CalendarEvent,
+  TimeRange
+};

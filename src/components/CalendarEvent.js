@@ -1,4 +1,5 @@
 import React from 'react';
+import TimeRange from './TimeRange';
 import mapIntervalsToDates from '../helpers/mapIntervalsToDates';
 
 function CalendarEvent(props) {
@@ -19,6 +20,10 @@ function CalendarEvent(props) {
     isResizable && currentEvent.id && modifyEvent(currentEvent);
     resizeEvent(e, currentEvent);
   };
+
+  const eventContent = (
+    <TimeRange intervals={intervalRange} isDescending={isDescending} />
+  );
 
   return (
     <div
@@ -45,8 +50,8 @@ function CalendarEvent(props) {
             data-date={interval}
           >
             {isDescending
-              ? i === intervals.length - 1 && 'Event Interval'
-              : i === 0 && 'Event Interval!'}
+              ? i === intervals.length - 1 && eventContent
+              : i === 0 && eventContent}
           </div>
         );
       })}
