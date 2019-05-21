@@ -1,4 +1,5 @@
-import { getEveningStatus, getIntervalHourOrMinutes } from './helpers';
+import getEveningStatus from './getEveningStatus';
+import getIntervalHourOrMinutes from './getIntervalHourOrMinutes';
 
 export default function getFormattedTime(date, isMilitary) {
   const isEvening = getEveningStatus(date, isMilitary);
