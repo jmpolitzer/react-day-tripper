@@ -1,6 +1,6 @@
 import React from 'react';
 import TimeRange from './TimeRange';
-import mapIntervalsToDates from '../helpers/mapIntervalsToDates';
+import { mapIntervalsToDates } from '../helpers';
 
 function CalendarEvent(props) {
   const {
@@ -10,7 +10,8 @@ function CalendarEvent(props) {
     isResizable,
     month,
     year,
-    dayOfWeek
+    dayOfWeek,
+    isMilitary
   } = props;
   const { intervals } = currentEvent;
   const isDescending = intervals[0] > intervals[1];
@@ -22,7 +23,11 @@ function CalendarEvent(props) {
   };
 
   const eventContent = (
-    <TimeRange intervals={intervalRange} isDescending={isDescending} />
+    <TimeRange
+      intervals={intervalRange}
+      isDescending={isDescending}
+      isMilitary={isMilitary}
+    />
   );
 
   return (

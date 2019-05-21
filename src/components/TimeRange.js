@@ -1,16 +1,28 @@
 import React from 'react';
+import { getEveningStatus, getIntervalHourOrMinutes } from '../helpers';
 
 function TimeRange(props) {
-  /* TODO: Move formatTime method to helpers directory. */
-
-  const { intervals, isDescending } = props;
+  const { intervals, isDescending, isMilitary } = props;
   const range = isDescending ? intervals.slice().reverse() : intervals;
-  const getTime = date => `${date.getHours()}:${date.getMinutes()}`;
-  const start = getTime(new Date(range[0]));
+  const getTime = date =>
+    `${getIntervalHourOrMinutes(
+      date,
+      0,
+      isMilitary
+    )}:${getIntervalHourOrMinutes(date, 1, isMilitary)}`;
+  const startDate = new Date(range[0]);
+  const start = getTime(startDate);
   const endDate = new Date(range[range.length - 1]);
   const end = getTime(new Date(endDate.setMinutes(endDate.getMinutes() + 15)));
+  const startIsEvening = getEveningStatus(startDate, true, isMilitary);
+  const endIsEvening = getEveningStatus(endDate, true, isMilitary);
+  const formatEvening = isEvening => (isEvening ? 'p' : '');
 
-  return <div>{`${start} - ${end}`}</div>;
+  return (
+    <div>{`${start}${formatEvening(startIsEvening)} - ${end}${formatEvening(
+      endIsEvening
+    )}`}</div>
+  );
 }
 
 export default TimeRange;
