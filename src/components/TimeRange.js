@@ -14,8 +14,8 @@ function TimeRange(props) {
   const start = getTime(startDate);
   const endDate = new Date(range[range.length - 1]);
   const end = getTime(new Date(endDate.setMinutes(endDate.getMinutes() + 15)));
-  const startIsEvening = getEveningStatus(startDate, true, isMilitary);
-  const endIsEvening = getEveningStatus(endDate, true, isMilitary);
+  const startIsEvening = getEveningStatus(startDate, isMilitary);
+  const endIsEvening = getEveningStatus(endDate, isMilitary);
   const formatEvening = isEvening => (isEvening ? 'p' : '');
 
   return (

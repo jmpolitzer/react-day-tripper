@@ -6,6 +6,7 @@ import Month from './Month';
 import Year from './Year';
 import CalendarEvent from './CalendarEvent';
 import TimeRange from './TimeRange';
+import CurrentTime from './CurrentTime';
 
 export {
   Calendar,
@@ -15,5 +16,6 @@ export {
   Month,
   Year,
   CalendarEvent,
-  TimeRange
+  TimeRange,
+  CurrentTime
 };

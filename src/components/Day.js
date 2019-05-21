@@ -2,6 +2,7 @@ import React from 'react';
 import Navigation from './Navigation';
 import CalendarEvent from './CalendarEvent';
 import useEvent from '../hooks/useEvent';
+import CurrentTime from './CurrentTime';
 import {
   getEveningStatus,
   getIntervalHourOrMinutes,
@@ -74,22 +75,7 @@ function Day(props) {
     }
   };
 
-  const getDayNavTitle = () => {
-    return (
-      <div className='day-headers'>
-        <div>{dayString}</div>
-        <div onClick={() => changeView('month')} className='clickable'>
-          {month}
-        </div>
-        <div>{dayOfWeek},</div>
-        <div onClick={() => changeView('year')} className='clickable'>
-          {year}
-        </div>
-      </div>
-    );
-  };
-
-  const getCurrentTime = quarter => {
+  const getCurrentTimeStatus = quarter => {
     const now = new Date();
     const isToday = date.toDateString() === now.toDateString();
     const isSameHour = quarter.getHours() === now.getHours();
@@ -97,17 +83,8 @@ function Day(props) {
     const quarterMinutes = quarter.getMinutes();
     const isSameQuarter =
       todayMinutes >= quarterMinutes && todayMinutes < quarterMinutes + 15;
-    const isEvening = getEveningStatus(quarter, true, isMilitary);
 
-    return isToday && isSameHour && isSameQuarter ? (
-      <div className='current-time current'>{`${getIntervalHourOrMinutes(
-        now,
-        0,
-        isMilitary
-      )}:${getIntervalHourOrMinutes(now, 1, isMilitary)}${
-        isEvening ? 'p' : ''
-      }`}</div>
-    ) : null;
+    return isToday && isSameHour && isSameQuarter;
   };
 
   const getEvents = quarter => {
@@ -121,6 +98,21 @@ function Day(props) {
 
     return eventsAndCurrentEvent.filter(
       event => event.intervals[0] === formattedQuarter
+    );
+  };
+
+  const getDayNavTitle = () => {
+    return (
+      <div className='day-headers'>
+        <div>{dayString}</div>
+        <div onClick={() => changeView('month')} className='clickable'>
+          {month}
+        </div>
+        <div>{dayOfWeek},</div>
+        <div onClick={() => changeView('year')} className='clickable'>
+          {year}
+        </div>
+      </div>
     );
   };
 
@@ -144,7 +136,9 @@ function Day(props) {
             <div key={i} className='quarter'>
               {hour.map((quarter, j) => {
                 const isHour = j % 4 === 0;
-                const isEvening = getEveningStatus(quarter, isHour, isMilitary);
+                const isEvening =
+                  isHour && getEveningStatus(quarter, isMilitary);
+                const isCurrentInterval = getCurrentTimeStatus(quarter);
 
                 return (
                   <div key={j}>
@@ -174,7 +168,9 @@ function Day(props) {
                         </div>
                         {isEvening && <div className='evening'>p</div>}
                       </div>
-                      {getCurrentTime(quarter)}
+                      {isCurrentInterval && (
+                        <CurrentTime isMilitary={isMilitary} />
+                      )}
                     </div>
                   </div>
                 );
