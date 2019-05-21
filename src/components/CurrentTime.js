@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getEveningStatus, getIntervalHourOrMinutes } from '../helpers';
+import { getFormattedTime } from '../helpers';
 
 function CurrentTime(props) {
   const { isMilitary } = props;
@@ -8,14 +8,7 @@ function CurrentTime(props) {
   useEffect(() => {
     const intervalId = setInterval(() => {
       const now = new Date();
-      const isEvening = getEveningStatus(now, true, isMilitary);
-      const time = `${getIntervalHourOrMinutes(
-        now,
-        0,
-        isMilitary
-      )}:${getIntervalHourOrMinutes(now, 1, isMilitary)}${
-        isEvening ? 'p' : ''
-      }`;
+      const time = getFormattedTime(now, isMilitary);
 
       setCurrentTime(time);
     }, 1000);
