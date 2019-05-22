@@ -5,7 +5,6 @@ import { mapIntervalsToDates } from '../helpers';
 function CalendarEvent(props) {
   const {
     currentEvent,
-    modifyEvent,
     resizeEvent,
     isResizable,
     month,
@@ -18,18 +17,20 @@ function CalendarEvent(props) {
   const intervalRange = mapIntervalsToDates(intervals, year, month, dayOfWeek);
 
   const handleMouseDown = e => {
-    isResizable && currentEvent.id && modifyEvent(currentEvent);
     resizeEvent(e, currentEvent);
   };
 
   const eventContent = (
-    <TimeRange
-      intervals={intervalRange}
-      isDescending={isDescending}
-      isMilitary={isMilitary}
-    />
+    <div>
+      <TimeRange
+        intervals={intervalRange}
+        isDescending={isDescending}
+        isMilitary={isMilitary}
+      />
+      <div>{currentEvent.description}</div>
+    </div>
   );
-
+  // console.log(intervalRange.length)
   return (
     <div
       onMouseDown={e => handleMouseDown(e)}

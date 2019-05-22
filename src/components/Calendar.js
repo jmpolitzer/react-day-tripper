@@ -6,7 +6,7 @@ import Month from './Month';
 import Year from './Year';
 
 function Calendar(props) {
-  const { events, saveEvent, modifyEvent } = props;
+  const { events, saveEvent } = props;
   const [currentView, setCurrentView] = useState('day');
   const {
     setDate,
@@ -66,7 +66,6 @@ function Calendar(props) {
             goToNextDay={goToNextDay}
             goToPreviousDay={goToPreviousDay}
             saveEvent={saveEvent}
-            modifyEvent={modifyEvent}
             events={dayEvents}
           />
         </div>
@@ -79,7 +78,6 @@ function Calendar(props) {
             goToNextWeek={goToNextWeek}
             goToPreviousWeek={goToPreviousWeek}
             saveEvent={saveEvent}
-            modifyEvent={modifyEvent}
             events={weekEvents}
           />
         </div>

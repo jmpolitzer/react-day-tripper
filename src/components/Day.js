@@ -18,7 +18,6 @@ function Day(props) {
     goToNextDay,
     isMilitary = false,
     saveEvent,
-    modifyEvent,
     events
   } = props;
   const { dayOfWeek, dayString, month, year, day: currentDay, date } = day;
@@ -66,9 +65,10 @@ function Day(props) {
         dayOfWeek
       );
       const eventToSave = {
+        id: currentEvent.id,
+        description: currentEvent.description || 'A New Event!',
         start: eventDates[0],
-        end: eventDates[eventDates.length - 1],
-        description: 'A new event!'
+        end: eventDates[eventDates.length - 1]
       };
 
       saveEvent(eventToSave);
@@ -90,7 +90,13 @@ function Day(props) {
   const getEvents = quarter => {
     const { start } = currentEvent;
     const formattedQuarter = formatQuarter(quarter);
-    const formattedEvents = formatEvents();
+    /*
+      If our currentEvent is being modified, the old version will be filtered out of the existing events
+      and the new one will be concatendated
+    */
+    const formattedEvents = formatEvents().filter(
+      event => event.id !== currentEvent.id
+    );
     const eventsAndCurrentEvent =
       quarter.getDay() === start.getDay()
         ? formattedEvents.concat(currentEvent)
@@ -147,7 +153,6 @@ function Day(props) {
                         <CalendarEvent
                           key={k}
                           currentEvent={event}
-                          modifyEvent={modifyEvent}
                           resizeEvent={resizeEvent}
                           isResizable={isResizable}
                           month={quarter.getMonth()}

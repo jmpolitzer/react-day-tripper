@@ -9,7 +9,6 @@ function Week(props) {
     goToNextWeek,
     goToPreviousWeek,
     saveEvent,
-    modifyEvent,
     events
   } = props;
   const { headers, week: currentWeek } = week;
@@ -66,7 +65,6 @@ function Week(props) {
                 changeView={changeView}
                 events={events.filter(e => e.start.getDay() === date.getDay())}
                 saveEvent={saveEvent}
-                modifyEvent={modifyEvent}
               />
             </div>
           );

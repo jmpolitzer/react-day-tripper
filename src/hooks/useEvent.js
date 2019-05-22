@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 function useEvent() {
   const [isResizable, setIsResizable] = useState(false);
   const [currentEvent, setCurrentEvent] = useState({
-    id: 'id',
     start: new Date(),
     intervals: []
   });
@@ -55,7 +54,6 @@ function useEvent() {
 
       date &&
         setCurrentEvent({
-          id: 'id',
           start: date.start,
           intervals: [date.interval]
         });
@@ -107,7 +105,6 @@ function useEvent() {
     document.removeEventListener('mouseup', resetCurrentEvent);
 
     setCurrentEvent({
-      id: 'id',
       start: new Date(),
       intervals: []
     });
