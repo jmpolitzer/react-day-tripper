@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Navigation from './Navigation';
 import Month from './Month';
 
@@ -39,5 +40,41 @@ function Year(props) {
     </div>
   );
 }
+
+Year.propTypes = {
+  year: PropTypes.shape({
+    year: PropTypes.number.isRequired,
+    quarters: PropTypes.arrayOf(
+      PropTypes.arrayOf(
+        PropTypes.shape({
+          headers: PropTypes.arrayOf(
+            PropTypes.shape({
+              single: PropTypes.string.isRequired,
+              short: PropTypes.string.isRequired,
+              medium: PropTypes.string.isRequired,
+              long: PropTypes.string.isRequired
+            })
+          ).isRequired,
+          year: PropTypes.string.isRequired,
+          month: PropTypes.shape({
+            index: PropTypes.number.isRequired,
+            stringName: PropTypes.string.isRequired
+          }),
+          weeks: PropTypes.arrayOf(
+            PropTypes.arrayOf(
+              PropTypes.shape({
+                dayOfWeek: PropTypes.string.isRequired,
+                date: PropTypes.instanceOf(Date).isRequired
+              })
+            )
+          ).isRequired
+        })
+      )
+    ).isRequired
+  }).isRequired,
+  changeView: PropTypes.func.isRequired,
+  goToNextYear: PropTypes.func.isRequired,
+  goToPreviousYear: PropTypes.func.isRequired
+};
 
 export default Year;

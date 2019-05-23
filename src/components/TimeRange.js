@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { getFormattedTime } from '../helpers';
 
 function TimeRange(props) {
@@ -14,5 +15,11 @@ function TimeRange(props) {
 
   return <div>{`${start} - ${end}`}</div>;
 }
+
+TimeRange.propTypes = {
+  intervals: PropTypes.arrayOf(PropTypes.instanceOf(Date)).isRequired,
+  isDescending: PropTypes.bool.isRequired,
+  isMilitary: PropTypes.bool.isRequired
+};
 
 export default TimeRange;
