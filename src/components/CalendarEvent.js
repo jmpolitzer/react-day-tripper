@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { eventPropTypes } from '../propTypes';
 import TimeRange from './TimeRange';
 import { mapIntervalsToDates } from '../helpers';
 
@@ -67,13 +68,7 @@ function CalendarEvent(props) {
 }
 
 CalendarEvent.propTypes = {
-  currentEvent: PropTypes.shape({
-    id: PropTypes.string,
-    description: PropTypes.string,
-    start: PropTypes.instanceOf(Date),
-    end: PropTypes.instanceOf(Date),
-    intervals: PropTypes.arrayOf(PropTypes.string)
-  }).isRequired,
+  currentEvent: eventPropTypes,
   resizeEvent: PropTypes.func.isRequired,
   isResizable: PropTypes.bool.isRequired,
   month: PropTypes.number.isRequired,

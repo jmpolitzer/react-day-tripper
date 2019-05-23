@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { dayPropTypes, eventPropTypes } from '../propTypes';
 import Navigation from './Navigation';
 import CalendarEvent from './CalendarEvent';
 import useEvent from '../hooks/useEvent';
@@ -190,28 +191,14 @@ function Day(props) {
 }
 
 Day.propTypes = {
-  day: PropTypes.shape({
-    dayOfWeek: PropTypes.string,
-    dayString: PropTypes.string,
-    month: PropTypes.string,
-    year: PropTypes.string,
-    day: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.instanceOf(Date))),
-    date: PropTypes.instanceOf(Date)
-  }),
+  day: dayPropTypes,
   changeView: PropTypes.func,
   isDayView: PropTypes.bool,
   goToPreviousDay: PropTypes.func,
   goToNextDay: PropTypes.func,
   isMilitary: PropTypes.bool,
   saveEvent: PropTypes.func.isRequired,
-  events: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      description: PropTypes.string,
-      start: PropTypes.instanceOf(Date).isRequired,
-      end: PropTypes.instanceOf(Date).isRequired
-    })
-  )
+  events: PropTypes.arrayOf(eventPropTypes)
 };
 
 export default Day;

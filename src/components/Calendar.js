@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
+import { eventPropTypes } from '../propTypes';
 import useCalendar from '../hooks/useCalendar';
 import Day from './Day';
 import Week from './Week';
@@ -111,7 +112,7 @@ function Calendar(props) {
 }
 
 Calendar.propTypes = {
-  events: PropTypes.array.isRequired,
+  events: PropTypes.arrayOf(eventPropTypes),
   saveEvent: PropTypes.func.isRequired
 };
 
