@@ -70,8 +70,8 @@ CalendarEvent.propTypes = {
   currentEvent: PropTypes.shape({
     id: PropTypes.string,
     description: PropTypes.string,
-    start: PropTypes.date,
-    end: PropTypes.date,
+    start: PropTypes.instanceOf(Date),
+    end: PropTypes.instanceOf(Date),
     intervals: PropTypes.arrayOf(PropTypes.string)
   }).isRequired,
   resizeEvent: PropTypes.func.isRequired,

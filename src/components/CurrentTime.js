@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { getFormattedTime } from '../helpers';
 
 function CurrentTime(props) {
@@ -20,5 +21,9 @@ function CurrentTime(props) {
 
   return <div className='current-time current'>{currentTime}</div>;
 }
+
+CurrentTime.propTypes = {
+  isMilitary: PropTypes.bool.isRequired
+};
 
 export default CurrentTime;
