@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 function Navigation(props) {
   const { previous, next, title, changeView } = props;
@@ -13,5 +14,12 @@ function Navigation(props) {
     </div>
   );
 }
+
+Navigation.propTypes = {
+  previous: PropTypes.func.isRequired,
+  next: PropTypes.func.isRequired,
+  title: PropTypes.element,
+  changeView: PropTypes.func
+};
 
 export default Navigation;
