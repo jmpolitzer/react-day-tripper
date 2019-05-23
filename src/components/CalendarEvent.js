@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import TimeRange from './TimeRange';
 import { mapIntervalsToDates } from '../helpers';
 
@@ -30,7 +31,7 @@ function CalendarEvent(props) {
       <div>{currentEvent.description}</div>
     </div>
   );
-  // console.log(intervalRange.length)
+
   return (
     <div
       onMouseDown={e => handleMouseDown(e)}
@@ -64,5 +65,21 @@ function CalendarEvent(props) {
     </div>
   );
 }
+
+CalendarEvent.propTypes = {
+  currentEvent: PropTypes.shape({
+    id: PropTypes.string,
+    description: PropTypes.string,
+    start: PropTypes.date,
+    end: PropTypes.date,
+    intervals: PropTypes.arrayOf(PropTypes.string)
+  }).isRequired,
+  resizeEvent: PropTypes.func.isRequired,
+  isResizable: PropTypes.bool.isRequired,
+  month: PropTypes.number.isRequired,
+  year: PropTypes.string.isRequired,
+  dayOfWeek: PropTypes.string.isRequired,
+  isMilitary: PropTypes.bool.isRequired
+};
 
 export default CalendarEvent;
