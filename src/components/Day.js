@@ -182,7 +182,8 @@ function Day(props) {
                     })}
                     <div css={quarterLineStyle} />
                     <div
-                      css={{ ...dayIntervalStyle, ...(isHour && hourStyle) }}
+                      className={`${isHour ? 'hour' : 'minutes'}`}
+                      style={{ ...dayIntervalStyle, ...(isHour && hourStyle) }}
                       data-date={quarter}
                     >
                       <div css={timeLabelStyle}>
