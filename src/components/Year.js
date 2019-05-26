@@ -1,8 +1,10 @@
-import React from 'react';
+/** @jsx jsx */
+import { jsx } from '@emotion/core';
 import PropTypes from 'prop-types';
 import { yearPropTypes } from '../propTypes';
 import Navigation from './Navigation';
 import Month from './Month';
+import { displayFlexStyle } from './styles';
 
 function Year(props) {
   const {
@@ -31,7 +33,7 @@ function Year(props) {
       />
       <div>
         {quarters.map((quarter, i) => (
-          <div className='year-row' key={i}>
+          <div css={displayFlexStyle} key={i}>
             {quarter.map((month: any, j: number) => (
               <Month key={j} month={month} changeView={changeView} />
             ))}

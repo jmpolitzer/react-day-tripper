@@ -1,8 +1,17 @@
-import React from 'react';
+/** @jsx jsx */
+import { jsx } from '@emotion/core';
 import PropTypes from 'prop-types';
 import { weekPropTypes, eventPropTypes } from '../propTypes';
 import Navigation from './Navigation';
 import Day from './Day';
+import {
+  clickableStyle,
+  currentStyle,
+  displayFlexStyle,
+  weekDayRangeStyle,
+  weekDayStyle,
+  weekDayHeaderStyle
+} from './styles';
 
 function Week(props) {
   const {
@@ -19,14 +28,14 @@ function Week(props) {
 
   const getWeekNavTitle = () => {
     return (
-      <div className='week-nav-header'>
-        <div className='clickable' onClick={() => changeView('month')}>
+      <div css={displayFlexStyle}>
+        <div css={clickableStyle} onClick={() => changeView('month')}>
           {firstDay.month}
         </div>
-        <div className='weekday-range'>
+        <div css={weekDayRangeStyle}>
           {`${firstDay.dayOfWeek} - ${lastDay.dayOfWeek},`}
         </div>
-        <div className='clickable' onClick={() => changeView('year')}>
+        <div css={clickableStyle} onClick={() => changeView('year')}>
           {lastDay.year}
         </div>
       </div>
@@ -41,22 +50,28 @@ function Week(props) {
         title={getWeekNavTitle()}
         changeView={changeView}
       />
-      <div className='week'>
+      <div css={displayFlexStyle}>
         {currentWeek.map((day, i) => {
           const { dayOfWeek, date } = day;
           const isToday = date.toDateString() === new Date().toDateString();
 
           return (
-            <div key={i} className='weekday'>
-              <div className='weekday-header'>
+            <div key={i} css={weekDayStyle}>
+              <div css={weekDayHeaderStyle}>
                 <div
-                  className={`clickable ${isToday ? 'current' : ''}`}
+                  css={{
+                    ...clickableStyle,
+                    ...(isToday && currentStyle)
+                  }}
                   onClick={() => changeView('day', date)}
                 >
                   {headers[i].long}
                 </div>
                 <div
-                  className={`clickable ${isToday ? 'current' : ''}`}
+                  css={{
+                    ...clickableStyle,
+                    ...(isToday && currentStyle)
+                  }}
                   onClick={() => changeView('day', date)}
                 >
                   {dayOfWeek}

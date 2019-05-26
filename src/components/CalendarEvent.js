@@ -1,8 +1,10 @@
-import React from 'react';
+/** @jsx jsx */
+import { jsx } from '@emotion/core';
 import PropTypes from 'prop-types';
 import { eventPropTypes } from '../propTypes';
 import TimeRange from './TimeRange';
 import { mapIntervalsToDates } from '../helpers';
+import { eventStyle, eventIntervalStyle } from './styles';
 
 function CalendarEvent(props) {
   const {
@@ -36,25 +38,13 @@ function CalendarEvent(props) {
   return (
     <div
       onMouseDown={e => handleMouseDown(e)}
-      className={`${isResizable ? 'event' : ''}`}
-      style={{
-        position: 'absolute',
-        ...(isDescending && {
-          transform: 'rotate(180deg)',
-          transformOrigin: '50% 23px'
-        })
-      }}
+      css={eventStyle(isResizable, isDescending)}
     >
       {intervalRange.map((interval, i) => {
         return (
           <div
             key={i}
-            className='event-interval'
-            style={{
-              ...(isDescending && {
-                transform: 'rotate(180deg)'
-              })
-            }}
+            css={eventIntervalStyle(isDescending)}
             data-date={interval}
           >
             {isDescending

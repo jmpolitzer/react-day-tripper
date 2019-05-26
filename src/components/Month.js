@@ -1,7 +1,15 @@
-import React from 'react';
+/** @jsx jsx */
+import { jsx } from '@emotion/core';
 import PropTypes from 'prop-types';
 import { monthPropTypes } from '../propTypes';
 import Navigation from './Navigation';
+import {
+  clickableStyle,
+  displayFlexStyle,
+  fontWeightBoldStyle,
+  monthSquareStyle,
+  currentStyle
+} from './styles';
 
 function Month(props) {
   const {
@@ -17,7 +25,7 @@ function Month(props) {
     return (
       <h1>
         <span>{month.stringName} </span>
-        <span className='clickable' onClick={() => changeView('year')}>
+        <span css={clickableStyle} onClick={() => changeView('year')}>
           {year}
         </span>
       </h1>
@@ -25,7 +33,7 @@ function Month(props) {
   };
 
   return (
-    <div className='month'>
+    <div>
       {isMonthView ? (
         <Navigation
           previous={goToPreviousMonth}
@@ -36,7 +44,7 @@ function Month(props) {
       ) : (
         <div>
           <h1
-            className='clickable'
+            css={clickableStyle}
             onClick={() =>
               changeView('month', new Date(parseInt(year), month.index, 1))
             }
@@ -45,9 +53,9 @@ function Month(props) {
           </h1>
         </div>
       )}
-      <div className='month-row month-headers'>
+      <div css={{ ...displayFlexStyle, ...fontWeightBoldStyle }}>
         {headers.map((header, i) => (
-          <div className='month-square' key={i}>
+          <div css={monthSquareStyle} key={i}>
             {header.single}
           </div>
         ))}
@@ -55,16 +63,18 @@ function Month(props) {
       <div>
         {weeks.map((week, i) => {
           return (
-            <div className='month-row' key={i}>
+            <div css={displayFlexStyle} key={i}>
               {week.map((day, j) => {
                 const isToday =
                   day.date.toDateString() === new Date().toDateString();
 
                 return (
                   <div
-                    className={`month-square clickable ${
-                      isToday ? 'current' : ''
-                    }`}
+                    css={{
+                      ...monthSquareStyle,
+                      ...clickableStyle,
+                      ...(isToday && currentStyle)
+                    }}
                     key={j}
                     onClick={() => changeView('day', day.date)}
                   >
