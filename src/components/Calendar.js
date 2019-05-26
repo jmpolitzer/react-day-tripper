@@ -60,44 +60,52 @@ function Calendar(props) {
   return (
     <div>
       {currentView === 'day' && (
-        <Day
-          day={day}
-          changeView={changeView}
-          isDayView
-          goToNextDay={goToNextDay}
-          goToPreviousDay={goToPreviousDay}
-          saveEvent={saveEvent}
-          events={dayEvents}
-        />
+        <div className='day'>
+          <Day
+            day={day}
+            changeView={changeView}
+            isDayView
+            goToNextDay={goToNextDay}
+            goToPreviousDay={goToPreviousDay}
+            saveEvent={saveEvent}
+            events={dayEvents}
+          />
+        </div>
       )}
       {currentView === 'week' && (
-        <Week
-          week={week}
-          changeView={changeView}
-          goToNextWeek={goToNextWeek}
-          goToPreviousWeek={goToPreviousWeek}
-          saveEvent={saveEvent}
-          events={weekEvents}
-        />
+        <div className='week'>
+          <Week
+            week={week}
+            changeView={changeView}
+            goToNextWeek={goToNextWeek}
+            goToPreviousWeek={goToPreviousWeek}
+            saveEvent={saveEvent}
+            events={weekEvents}
+          />
+        </div>
       )}
       {currentView === 'month' && (
-        <Month
-          month={month}
-          changeView={changeView}
-          isMonthView
-          goToNextMonth={goToNextMonth}
-          goToPreviousMonth={goToPreviousMonth}
-          events={monthEvents}
-        />
+        <div className='month'>
+          <Month
+            month={month}
+            changeView={changeView}
+            isMonthView
+            goToNextMonth={goToNextMonth}
+            goToPreviousMonth={goToPreviousMonth}
+            events={monthEvents}
+          />
+        </div>
       )}
       {currentView === 'year' && (
-        <Year
-          year={year}
-          changeView={changeView}
-          goToNextYear={goToNextYear}
-          goToPreviousYear={goToPreviousYear}
-          events={yearEvents}
-        />
+        <div className='year'>
+          <Year
+            year={year}
+            changeView={changeView}
+            goToNextYear={goToNextYear}
+            goToPreviousYear={goToPreviousYear}
+            events={yearEvents}
+          />
+        </div>
       )}
     </div>
   );

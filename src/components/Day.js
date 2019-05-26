@@ -1,5 +1,4 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { dayPropTypes, eventPropTypes } from '../propTypes';
 import Navigation from './Navigation';
@@ -11,17 +10,6 @@ import {
   getIntervalHourOrMinutes,
   mapIntervalsToDates
 } from '../helpers';
-import {
-  displayFlexStyle,
-  dayHeadersStyle,
-  clickableStyle,
-  quarterLineStyle,
-  dayIntervalStyle,
-  hourStyle,
-  timeLabelStyle,
-  eveningLabelStyle,
-  buttonStyle
-} from './styles';
 
 function Day(props) {
   const {
@@ -123,13 +111,13 @@ function Day(props) {
 
   const getDayNavTitle = () => {
     return (
-      <div css={{ ...displayFlexStyle, ...dayHeadersStyle }}>
+      <div className='day-headers'>
         <div>{dayString}</div>
-        <div onClick={() => changeView('month')} css={clickableStyle}>
+        <div onClick={() => changeView('month')} className='clickable'>
           {month}
         </div>
         <div>{dayOfWeek},</div>
-        <div onClick={() => changeView('year')} css={clickableStyle}>
+        <div onClick={() => changeView('year')} className='clickable'>
           {year}
         </div>
       </div>
@@ -138,11 +126,7 @@ function Day(props) {
 
   return (
     <div>
-      {isDayView && (
-        <button css={buttonStyle} onClick={() => changeView('week')}>
-          Week
-        </button>
-      )}
+      {isDayView && <button onClick={() => changeView('week')}>Week</button>}
       {isDayView && (
         <Navigation
           previous={goToPreviousDay}
@@ -157,7 +141,7 @@ function Day(props) {
       >
         {currentDay.map((hour, i) => {
           return (
-            <div key={i}>
+            <div key={i} className='quarter'>
               {hour.map((quarter, j) => {
                 const isHour = j % 4 === 0;
                 const isEvening =
@@ -180,16 +164,16 @@ function Day(props) {
                         />
                       );
                     })}
-                    <div css={quarterLineStyle} />
+                    <div className='quarter-line' />
                     <div
-                      css={{ ...dayIntervalStyle, ...(isHour && hourStyle) }}
+                      className={`${isHour ? 'hour' : 'minutes'}`}
                       data-date={quarter}
                     >
-                      <div css={timeLabelStyle}>
+                      <div className='time-label'>
                         <div>
                           {getIntervalHourOrMinutes(quarter, j, isMilitary)}
                         </div>
-                        {isEvening && <div css={eveningLabelStyle}>p</div>}
+                        {isEvening && <div className='evening'>p</div>}
                       </div>
                       {isCurrentInterval && (
                         <CurrentTime isMilitary={isMilitary} />

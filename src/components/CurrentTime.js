@@ -1,9 +1,6 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { getFormattedTime } from '../helpers';
-import { currentTimeStyle, currentStyle } from './styles';
 
 function CurrentTime(props) {
   const { isMilitary } = props;
@@ -22,9 +19,7 @@ function CurrentTime(props) {
     };
   }, []);
 
-  return (
-    <div css={{ ...currentTimeStyle, ...currentStyle }}>{currentTime}</div>
-  );
+  return <div className='current-time current'>{currentTime}</div>;
 }
 
 CurrentTime.propTypes = {
