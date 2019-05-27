@@ -1,4 +1,6 @@
-import React from 'react';
+/** @jsx jsx */
+import { jsx } from '@emotion/core';
+import { memo } from 'react';
 import PropTypes from 'prop-types';
 import { dayPropTypes, eventPropTypes } from '../propTypes';
 import Navigation from './Navigation';
@@ -10,8 +12,63 @@ import {
   getIntervalHourOrMinutes,
   mapIntervalsToDates
 } from '../helpers';
+import {
+  displayFlexStyle,
+  clickableStyle,
+  dayHeadersStyle,
+  dayIntervalStyle,
+  quarterLineStyle,
+  hourStyle,
+  timeLabelStyle,
+  eveningLabelStyle
+} from './styles';
 
-function Day(props) {
+const QuarterLine = memo(() => <div css={quarterLineStyle} />);
+const QuarterSlot = memo(props => {
+  const {
+    quarter,
+    isHour,
+    index,
+    isMilitary,
+    isEvening,
+    isCurrentInterval
+  } = props;
+
+  return (
+    <div
+      data-date={quarter}
+      data-interval={isHour ? 'hour' : 'minutes'}
+      css={dayIntervalStyle}
+    >
+      <div css={timeLabelStyle}>
+        <div css={isHour && hourStyle}>
+          {getIntervalHourOrMinutes(quarter, index, isMilitary)}
+        </div>
+        {isEvening && <div css={eveningLabelStyle}>p</div>}
+      </div>
+      {isCurrentInterval && <CurrentTime isMilitary={isMilitary} />}
+    </div>
+  );
+});
+
+const DayNavTitle = memo(props => {
+  const { dayString, month, dayOfWeek, year, changeView } = props;
+
+  return (
+    <div css={[displayFlexStyle, dayHeadersStyle]}>
+      <div>{dayString}</div>
+      <div onClick={() => changeView('month')} css={clickableStyle}>
+        {month}
+      </div>
+      <div>{dayOfWeek},</div>
+      <div onClick={() => changeView('year')} css={clickableStyle}>
+        {year}
+      </div>
+    </div>
+  );
+});
+
+const Day = memo(props => {
   const {
     day,
     changeView,
@@ -109,20 +166,15 @@ function Day(props) {
     );
   };
 
-  const getDayNavTitle = () => {
-    return (
-      <div className='day-headers'>
-        <div>{dayString}</div>
-        <div onClick={() => changeView('month')} className='clickable'>
-          {month}
-        </div>
-        <div>{dayOfWeek},</div>
-        <div onClick={() => changeView('year')} className='clickable'>
-          {year}
-        </div>
-      </div>
-    );
-  };
+  const NavTitle = (
+    <DayNavTitle
+      dayString={dayString}
+      month={month}
+      dayOfWeek={dayOfWeek}
+      year={year}
+      changeView={changeView}
+    />
+  );
 
   return (
     <div>
@@ -131,7 +183,7 @@ function Day(props) {
         <Navigation
           previous={goToPreviousDay}
           next={goToNextDay}
-          title={getDayNavTitle()}
+          title={NavTitle}
           changeView={changeView}
         />
       )}
@@ -141,7 +193,7 @@ function Day(props) {
       >
         {currentDay.map((hour, i) => {
           return (
-            <div key={i} className='quarter'>
+            <div key={i}>
               {hour.map((quarter, j) => {
                 const isHour = j % 4 === 0;
                 const isEvening =
@@ -164,21 +216,15 @@ function Day(props) {
                         />
                       );
                     })}
-                    <div className='quarter-line' />
-                    <div
-                      className={`${isHour ? 'hour' : 'minutes'}`}
-                      data-date={quarter}
-                    >
-                      <div className='time-label'>
-                        <div>
-                          {getIntervalHourOrMinutes(quarter, j, isMilitary)}
-                        </div>
-                        {isEvening && <div className='evening'>p</div>}
-                      </div>
-                      {isCurrentInterval && (
-                        <CurrentTime isMilitary={isMilitary} />
-                      )}
-                    </div>
+                    <QuarterLine />
+                    <QuarterSlot
+                      quarter={quarter}
+                      isHour={isHour}
+                      index={j}
+                      isMilitary={isMilitary}
+                      isEvening={isEvening}
+                      isCurrentInterval={isCurrentInterval}
+                    />
                   </div>
                 );
               })}
@@ -188,7 +234,7 @@ function Day(props) {
       </div>
     </div>
   );
-}
+});
 
 Day.propTypes = {
   day: dayPropTypes,

@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import { eventPropTypes } from '../propTypes';
 import TimeRange from './TimeRange';
 import { mapIntervalsToDates } from '../helpers';
 
-function CalendarEvent(props) {
+const CalendarEvent = memo(props => {
   const {
     currentEvent,
     resizeEvent,
@@ -65,7 +65,7 @@ function CalendarEvent(props) {
       })}
     </div>
   );
-}
+});
 
 CalendarEvent.propTypes = {
   currentEvent: eventPropTypes,

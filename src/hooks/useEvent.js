@@ -18,10 +18,13 @@ function useEvent() {
   }, []);
 
   const isInterval = e => {
-    const { className } = e.target;
-    const intervalClasses = ['hour', 'minutes'];
+    const { attributes } = e.target;
+    const intervalTypes = ['hour', 'minutes'];
 
-    return intervalClasses.includes(className);
+    return (
+      attributes['data-interval'] &&
+      intervalTypes.includes(attributes['data-interval'].nodeValue)
+    );
   };
 
   const isClickable = e => {
