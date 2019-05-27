@@ -34,6 +34,8 @@ const QuarterSlot = memo(props => {
     isCurrentInterval
   } = props;
 
+  /* TODO: Standardize quarter prop to avoid unnecessary re-renders. */
+
   return (
     <div
       data-date={quarter}

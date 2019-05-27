@@ -9,7 +9,7 @@ import Year from './Year';
 
 function Calendar(props) {
   const { events, saveEvent } = props;
-  const [currentView, setCurrentView] = useState('day');
+  const [currentView, setCurrentView] = useState('week');
   const {
     setDate,
     getMonth,

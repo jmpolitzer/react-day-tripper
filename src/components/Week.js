@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import { weekPropTypes, eventPropTypes } from '../propTypes';
 import Navigation from './Navigation';
 import Day from './Day';
 
-function Week(props) {
+const Week = memo(props => {
   const {
     week,
     changeView,
@@ -74,7 +74,7 @@ function Week(props) {
       </div>
     </div>
   );
-}
+});
 
 Week.propTypes = {
   week: weekPropTypes,
