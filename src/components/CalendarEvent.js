@@ -45,7 +45,7 @@ const CalendarEvent = memo(props => {
         })
       }}
     >
-      {intervalRange.map((interval, i) => {
+      {intervals.map((interval, i) => {
         return (
           <div
             key={i}

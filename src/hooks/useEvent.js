@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { getHoursFromInterval, getMinutesFromInterval } from '../helpers';
 
 function useEvent() {
   const [isResizable, setIsResizable] = useState(false);
@@ -39,21 +40,24 @@ function useEvent() {
     }
   };
 
-  const getDateAttr = e => {
+  const createDateFromAttr = (e, day) => {
     const { attributes } = e.target;
 
     if (attributes['data-date']) {
-      const date = new Date(attributes['data-date'].nodeValue);
-      const hour = date.getHours();
-      const minutes = date.getMinutes() === 0 ? '00' : date.getMinutes();
+      const interval = attributes['data-date'].nodeValue;
+      const hour = getHoursFromInterval(interval);
+      const minutes = getMinutesFromInterval(interval);
+      const date = new Date(
+        new Date(new Date(day).setHours(hour)).setMinutes(minutes)
+      );
 
-      return { start: date, interval: `${hour}${minutes}` };
+      return { start: date, interval };
     }
   };
 
-  const createEvent = e => {
+  const createEvent = (e, day) => {
     if (isInterval(e)) {
-      const date = getDateAttr(e);
+      const date = createDateFromAttr(e, day);
 
       date &&
         setCurrentEvent({
@@ -71,12 +75,13 @@ function useEvent() {
   const modifyEvent = e => {
     setIsResizable(isClickable(e));
 
-    const date = getDateAttr(e);
+    const { attributes } = e.target;
+    const interval =
+      attributes['data-date'] && attributes['data-date'].nodeValue;
 
-    date &&
+    interval &&
       setCurrentEvent(event => {
         const { intervals } = event;
-        const { interval } = date;
         const lastQuarter = parseInt(intervals[intervals.length - 1], 10);
         const secondToLastQuarter = parseInt(
           intervals[intervals.length - 2],

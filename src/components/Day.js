@@ -27,14 +27,12 @@ const QuarterLine = memo(() => <div css={quarterLineStyle} />);
 const QuarterSlot = memo(props => {
   const {
     quarter,
+    value,
     isHour,
-    index,
     isMilitary,
     isEvening,
     isCurrentInterval
   } = props;
-
-  /* TODO: Standardize quarter prop to avoid unnecessary re-renders. */
 
   return (
     <div
@@ -43,9 +41,7 @@ const QuarterSlot = memo(props => {
       css={dayIntervalStyle}
     >
       <div css={timeLabelStyle}>
-        <div css={isHour && hourStyle}>
-          {getIntervalHourOrMinutes(quarter, index, isMilitary)}
-        </div>
+        <div css={isHour && hourStyle}>{value}</div>
         {isEvening && <div css={eveningLabelStyle}>p</div>}
       </div>
       {isCurrentInterval && <CurrentTime isMilitary={isMilitary} />}
@@ -190,7 +186,7 @@ const Day = memo(props => {
         />
       )}
       <div
-        onMouseDown={(e: any) => createEvent(e)}
+        onMouseDown={(e: any) => createEvent(e, date)}
         onMouseUp={formatAndSaveEvent}
       >
         {currentDay.map((hour, i) => {
@@ -220,9 +216,9 @@ const Day = memo(props => {
                     })}
                     <QuarterLine />
                     <QuarterSlot
-                      quarter={quarter}
+                      quarter={formatQuarter(quarter)}
+                      value={getIntervalHourOrMinutes(quarter, j, isMilitary)}
                       isHour={isHour}
-                      index={j}
                       isMilitary={isMilitary}
                       isEvening={isEvening}
                       isCurrentInterval={isCurrentInterval}
