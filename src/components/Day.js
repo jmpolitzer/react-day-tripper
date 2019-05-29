@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import { memo } from 'react';
+import { memo, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { dayPropTypes, eventPropTypes } from '../propTypes';
 import Navigation from './Navigation';
@@ -22,6 +22,62 @@ import {
   timeLabelStyle,
   eveningLabelStyle
 } from './styles';
+
+const formatQuarter = quarter => {
+  const quarterHour = quarter.getHours();
+  const quarterMinutes =
+    quarter.getMinutes() === 0 ? '00' : quarter.getMinutes();
+
+  return `${quarterHour}${quarterMinutes}`;
+};
+
+const DayNavTitle = memo(props => {
+  const { dayString, month, dayOfWeek, year, changeView } = props;
+
+  return (
+    <div css={[displayFlexStyle, dayHeadersStyle]}>
+      <div>{dayString}</div>
+      <div onClick={() => changeView('month')} css={clickableStyle}>
+        {month}
+      </div>
+      <div>{dayOfWeek},</div>
+      <div onClick={() => changeView('year')} css={clickableStyle}>
+        {year}
+      </div>
+    </div>
+  );
+});
+
+const Events = memo(props => {
+  const {
+    events,
+    resizeEvent,
+    isResizable,
+    month,
+    year,
+    dayOfWeek,
+    isMilitary
+  } = props;
+
+  return (
+    <Fragment>
+      {events.map((event, k) => {
+        return (
+          <CalendarEvent
+            key={k}
+            currentEvent={event}
+            resizeEvent={resizeEvent}
+            isResizable={isResizable}
+            month={month}
+            year={year}
+            dayOfWeek={dayOfWeek}
+            isMilitary={isMilitary}
+          />
+        );
+      })}
+    </Fragment>
+  );
+});
 
 const QuarterLine = memo(() => <div css={quarterLineStyle} />);
 const QuarterSlot = memo(props => {
@@ -49,43 +105,29 @@ const QuarterSlot = memo(props => {
   );
 });
 
-const DayNavTitle = memo(props => {
-  const { dayString, month, dayOfWeek, year, changeView } = props;
-
-  return (
-    <div css={[displayFlexStyle, dayHeadersStyle]}>
-      <div>{dayString}</div>
-      <div onClick={() => changeView('month')} css={clickableStyle}>
-        {month}
-      </div>
-      <div>{dayOfWeek},</div>
-      <div onClick={() => changeView('year')} css={clickableStyle}>
-        {year}
-      </div>
-    </div>
-  );
-});
-
-const Day = memo(props => {
+const DayColumn = memo(props => {
   const {
-    day,
-    changeView,
-    isDayView,
-    goToPreviousDay,
-    goToNextDay,
-    isMilitary = false,
-    saveEvent,
+    currentDay,
+    currentEvent,
+    isMilitary,
+    resizeEvent,
+    isResizable,
+    year,
+    dayOfWeek,
+    date,
     events
   } = props;
-  const { dayOfWeek, dayString, month, year, day: currentDay, date } = day;
-  const { currentEvent, createEvent, resizeEvent, isResizable } = useEvent();
 
-  const formatQuarter = quarter => {
-    const quarterHour = quarter.getHours();
-    const quarterMinutes =
-      quarter.getMinutes() === 0 ? '00' : quarter.getMinutes();
+  const getCurrentTimeStatus = quarter => {
+    const now = new Date();
+    const isToday = date.toDateString() === now.toDateString();
+    const isSameHour = quarter.getHours() === now.getHours();
+    const todayMinutes = now.getMinutes();
+    const quarterMinutes = quarter.getMinutes();
+    const isSameQuarter =
+      todayMinutes >= quarterMinutes && todayMinutes < quarterMinutes + 15;
 
-    return `${quarterHour}${quarterMinutes}`;
+    return isToday && isSameHour && isSameQuarter;
   };
 
   const formatEvents = () => {
@@ -107,6 +149,80 @@ const Day = memo(props => {
       };
     });
   };
+
+  const getEvents = quarter => {
+    const { start } = currentEvent;
+    const formattedQuarter = formatQuarter(quarter);
+    /*
+      If our currentEvent is being modified, the old version will be filtered out of the existing events
+      and the new one will be concatendated
+    */
+    const formattedEvents = formatEvents().filter(
+      event => event.id !== currentEvent.id
+    );
+    const eventsAndCurrentEvent =
+      quarter.getDay() === start.getDay()
+        ? formattedEvents.concat(currentEvent)
+        : formattedEvents;
+
+    return eventsAndCurrentEvent.filter(
+      event => event.intervals[0] === formattedQuarter
+    );
+  };
+
+  return (
+    <Fragment>
+      {currentDay.map((hour, i) => {
+        return (
+          <div key={i}>
+            {hour.map((quarter, j) => {
+              const isHour = j % 4 === 0;
+              const isEvening = isHour && getEveningStatus(quarter, isMilitary);
+              const isCurrentInterval = getCurrentTimeStatus(quarter);
+
+              return (
+                <div key={j}>
+                  <Events
+                    events={getEvents(quarter)}
+                    resizeEvent={resizeEvent}
+                    isResizable={isResizable}
+                    month={quarter.getMonth()}
+                    year={year}
+                    dayOfWeek={dayOfWeek}
+                    isMilitary={isMilitary}
+                  />
+                  <QuarterLine />
+                  <QuarterSlot
+                    quarter={formatQuarter(quarter)}
+                    value={getIntervalHourOrMinutes(quarter, j, isMilitary)}
+                    isHour={isHour}
+                    isMilitary={isMilitary}
+                    isEvening={isEvening}
+                    isCurrentInterval={isCurrentInterval}
+                  />
+                </div>
+              );
+            })}
+          </div>
+        );
+      })}
+    </Fragment>
+  );
+});
+
+const Day = memo(props => {
+  const {
+    day,
+    changeView,
+    isDayView,
+    goToPreviousDay,
+    goToNextDay,
+    isMilitary = false,
+    saveEvent,
+    events
+  } = props;
+  const { dayOfWeek, dayString, month, year, day: currentDay, date } = day;
+  const { currentEvent, createEvent, resizeEvent, isResizable } = useEvent();
 
   const formatAndSaveEvent = () => {
     if (currentEvent.intervals.length > 0) {
@@ -130,38 +246,6 @@ const Day = memo(props => {
 
       saveEvent(eventToSave);
     }
-  };
-
-  const getCurrentTimeStatus = quarter => {
-    const now = new Date();
-    const isToday = date.toDateString() === now.toDateString();
-    const isSameHour = quarter.getHours() === now.getHours();
-    const todayMinutes = now.getMinutes();
-    const quarterMinutes = quarter.getMinutes();
-    const isSameQuarter =
-      todayMinutes >= quarterMinutes && todayMinutes < quarterMinutes + 15;
-
-    return isToday && isSameHour && isSameQuarter;
-  };
-
-  const getEvents = quarter => {
-    const { start } = currentEvent;
-    const formattedQuarter = formatQuarter(quarter);
-    /*
-      If our currentEvent is being modified, the old version will be filtered out of the existing events
-      and the new one will be concatendated
-    */
-    const formattedEvents = formatEvents().filter(
-      event => event.id !== currentEvent.id
-    );
-    const eventsAndCurrentEvent =
-      quarter.getDay() === start.getDay()
-        ? formattedEvents.concat(currentEvent)
-        : formattedEvents;
-
-    return eventsAndCurrentEvent.filter(
-      event => event.intervals[0] === formattedQuarter
-    );
   };
 
   const NavTitle = (
@@ -189,46 +273,17 @@ const Day = memo(props => {
         onMouseDown={(e: any) => createEvent(e, date)}
         onMouseUp={formatAndSaveEvent}
       >
-        {currentDay.map((hour, i) => {
-          return (
-            <div key={i}>
-              {hour.map((quarter, j) => {
-                const isHour = j % 4 === 0;
-                const isEvening =
-                  isHour && getEveningStatus(quarter, isMilitary);
-                const isCurrentInterval = getCurrentTimeStatus(quarter);
-
-                return (
-                  <div key={j}>
-                    {getEvents(quarter).map((event, k) => {
-                      return (
-                        <CalendarEvent
-                          key={k}
-                          currentEvent={event}
-                          resizeEvent={resizeEvent}
-                          isResizable={isResizable}
-                          month={quarter.getMonth()}
-                          year={year}
-                          dayOfWeek={dayOfWeek}
-                          isMilitary={isMilitary}
-                        />
-                      );
-                    })}
-                    <QuarterLine />
-                    <QuarterSlot
-                      quarter={formatQuarter(quarter)}
-                      value={getIntervalHourOrMinutes(quarter, j, isMilitary)}
-                      isHour={isHour}
-                      isMilitary={isMilitary}
-                      isEvening={isEvening}
-                      isCurrentInterval={isCurrentInterval}
-                    />
-                  </div>
-                );
-              })}
-            </div>
-          );
-        })}
+        <DayColumn
+          currentDay={currentDay}
+          currentEvent={currentEvent}
+          isMilitary={isMilitary}
+          resizeEvent={resizeEvent}
+          isResizable={isResizable}
+          year={year}
+          dayOfWeek={dayOfWeek}
+          date={date}
+          events={events}
+        />
       </div>
     </div>
   );
