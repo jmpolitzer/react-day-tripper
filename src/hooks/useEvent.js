@@ -107,7 +107,7 @@ function useEvent() {
   const checkForResizability = e => {
     const clickable = isClickable(e);
 
-    clickable !== isResizable && setIsResizable(isClickable(e));
+    setIsResizable(clickable);
   };
 
   const resetCurrentEvent = e => {

@@ -83,6 +83,7 @@
   },
   "dependencies": {
     "@emotion/core": "^10.0.10",
-    "date-fns": "2.0.0-alpha.27"
+    "date-fns": "2.0.0-alpha.27",
+    "react-virtualized": "^9.21.1"
   }
 }

@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { Fragment, memo } from 'react';
 import PropTypes from 'prop-types';
 import { eventPropTypes } from '../propTypes';
 import TimeRange from './TimeRange';
@@ -17,20 +17,19 @@ const CalendarEvent = memo(props => {
   const { intervals } = currentEvent;
   const isDescending = intervals[0] > intervals[1];
   const intervalRange = mapIntervalsToDates(intervals, year, month, dayOfWeek);
-
   const handleMouseDown = e => {
     resizeEvent(e, currentEvent);
   };
 
   const eventContent = (
-    <div>
+    <Fragment>
       <TimeRange
         intervals={intervalRange}
         isDescending={isDescending}
         isMilitary={isMilitary}
       />
       <div>{currentEvent.description}</div>
-    </div>
+    </Fragment>
   );
 
   return (
@@ -39,6 +38,7 @@ const CalendarEvent = memo(props => {
       className={`${isResizable ? 'event' : ''}`}
       style={{
         position: 'absolute',
+        zIndex: 99999,
         ...(isDescending && {
           transform: 'rotate(180deg)',
           transformOrigin: '50% 23px'

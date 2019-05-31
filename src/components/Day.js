@@ -2,6 +2,7 @@
 import { jsx } from '@emotion/core';
 import { memo, Fragment } from 'react';
 import PropTypes from 'prop-types';
+import { List } from 'react-virtualized';
 import { dayPropTypes, eventPropTypes } from '../propTypes';
 import Navigation from './Navigation';
 import CalendarEvent from './CalendarEvent';
@@ -170,43 +171,47 @@ const DayColumn = memo(props => {
     );
   };
 
-  return (
-    <Fragment>
-      {currentDay.map((hour, i) => {
-        return (
-          <div key={i}>
-            {hour.map((quarter, j) => {
-              const isHour = j % 4 === 0;
-              const isEvening = isHour && getEveningStatus(quarter, isMilitary);
-              const isCurrentInterval = getCurrentTimeStatus(quarter);
+  const listRows = currentDay.map(hour => hour.map(quarter => quarter)).flat();
 
-              return (
-                <div key={j}>
-                  <Events
-                    events={getEvents(quarter)}
-                    resizeEvent={resizeEvent}
-                    isResizable={isResizable}
-                    month={quarter.getMonth()}
-                    year={year}
-                    dayOfWeek={dayOfWeek}
-                    isMilitary={isMilitary}
-                  />
-                  <QuarterLine />
-                  <QuarterSlot
-                    quarter={formatQuarter(quarter)}
-                    value={getIntervalHourOrMinutes(quarter, j, isMilitary)}
-                    isHour={isHour}
-                    isMilitary={isMilitary}
-                    isEvening={isEvening}
-                    isCurrentInterval={isCurrentInterval}
-                  />
-                </div>
-              );
-            })}
-          </div>
-        );
-      })}
-    </Fragment>
+  const rowRenderer = props => {
+    const { key, index, style } = props;
+    const quarter = listRows[index];
+    const isHour = index % 4 === 0;
+    const isEvening = isHour && getEveningStatus(quarter, isMilitary);
+    const isCurrentInterval = getCurrentTimeStatus(quarter);
+
+    return (
+      <div key={key} style={style}>
+        <Events
+          events={getEvents(quarter)}
+          resizeEvent={resizeEvent}
+          isResizable={isResizable}
+          month={quarter.getMonth()}
+          year={year}
+          dayOfWeek={dayOfWeek}
+          isMilitary={isMilitary}
+        />
+        <QuarterLine />
+        <QuarterSlot
+          quarter={formatQuarter(quarter)}
+          value={getIntervalHourOrMinutes(quarter, index, isMilitary)}
+          isHour={isHour}
+          isMilitary={isMilitary}
+          isEvening={isEvening}
+          isCurrentInterval={isCurrentInterval}
+        />
+      </div>
+    );
+  };
+
+  return (
+    <List
+      width={200}
+      height={500}
+      rowCount={listRows.length}
+      rowHeight={45}
+      rowRenderer={rowRenderer}
+    />
   );
 });
 
